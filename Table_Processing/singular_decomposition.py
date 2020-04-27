@@ -1,4 +1,5 @@
 import numpy as np
+from math import fabs
 
 sentences_list = [['полиц', 'основател', 'WikiLeaks'],
                   ['суд', ' США', 'прот'],
@@ -13,27 +14,54 @@ sentences_list = [['полиц', 'основател', 'WikiLeaks'],
 
 
 class DynamicMatrix():
+    '''
+    Класс динамической матрицы размера m строк, n столбцов
+    '''
     def __init__(self, m, n):
+        '''
+        Создает нулевую матрицу mxn
+        :param m: число строк
+        :param n: число столбцов
+        '''
         self.matrix = list()
         self.m = m
         self.n = n
-        for i in range(n):
-            self.matrix.append([0])
+        for i in range(m):
+            for i in range(n):
+                self.matrix.append([0])
 
     def inc(self, i, j):
+        '''
+        Инкремент элемента (i,j)
+        :param i: номер строки
+        :param j: номер столбца
+        :return: None
+        '''
         self.matrix[i][j] += 1
 
     def append_str(self):
+        '''
+        Добавляет строку в матрицу
+        :return: None
+        '''
         for col in self.matrix:
             col.append(0)
         self.m += 1
 
 
 class FrequenciesMatrix(object):
+    '''
+    Класс для работы с матрицой частотности термов на предложение
+    Для хранения частот используется матрица, в которой строкам отвечает терм, а столбцам - предложение
+    '''
     __word_counter = 0
     __hash_list = dict()
 
     def __init__(self, sentences):
+        '''
+        Создает частотную матрицу по списку предложений
+        :param sentences: список предложений разбитых на слова
+        '''
         self.keys = dict()  # Обратные ключи, чтобы восстановить из номера строки слово  !!УБРАТЬ ЭТО!!
         table = DynamicMatrix(1, len(sentences))  # Заготовка матрицы по количеству предложений
         sentences_counter = 0
@@ -54,6 +82,11 @@ class FrequenciesMatrix(object):
         self.freq_matrix = np.array(table.matrix).transpose()
 
     def __hash(self, word):
+        '''
+        Функция, сопоставляющяя слову его номер строки
+        :param word: слово
+        :return: номер строки
+        '''
         try:
             # Слово уже встречалось и номер его строки есть в словаре _hash_list
             return self.__hash_list[word]
