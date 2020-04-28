@@ -1,4 +1,5 @@
----Поля `direction_call` (направление вызова) и `status_ending` (статус завершения) в таблице `information` и поле `blacklist` в таблице `client`
+---Поля `direction_call` (направление вызова) и `status_ending` (статус завершения) в таблице `information` и поле `blacklist` 
+в таблице `client`
 ---предлагаю хранить в int и каждой цифре присвоить свое значение статуса
 ---Например,
 ---`derection_call`
