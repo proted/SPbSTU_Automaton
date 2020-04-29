@@ -1,52 +1,22 @@
 import numpy as np
 from math import fabs
 
-sentences_list = [['полиц', 'основател', 'WikiLeaks'],
-                  ['суд', ' США', 'прот'],
-                  ['Церемон','вручен','нобелевск', 'прем', 'стран'],
-                  ['Великобритан', 'арестова', 'основател', 'Wikileaks'],
+sentences_list = [['полиц', 'основател', 'wikileaks'],
+                  ['суд', 'сша', 'прот'],
+                  ['церемон','вручен','нобелевск', 'прем', 'стран'],
+                  ['великобритан', 'арестова', 'основател', 'wikileaks'],
                   ['церемон', 'вручен', 'нобелевск','прем'],
-                  ['суд', 'основател', 'Wikileaks'],
-                  ['США', 'стран', 'прот'],
-                  ['полиц', 'великобритан', 'основател', 'WikiLeaks', 'арестова'],
+                  ['суд', 'основател', 'wikileaks'],
+                  ['сша', 'стран', 'прот'],
+                  ['полиц', 'великобритан', 'основател', 'wikileaks', 'арестова'],
                   ['вручен', 'нобелевск', 'прем']]
 
 
-
-class DynamicMatrix():
-    '''
-    Класс динамической матрицы размера m строк, n столбцов
-    '''
-    def __init__(self, m, n):
-        '''
-        Создает нулевую матрицу mxn
-        :param m: число строк
-        :param n: число столбцов
-        '''
-        self.matrix = list()
-        self.m = m
-        self.n = n
-        for i in range(m):
-            for i in range(n):
-                self.matrix.append([0])
-
-    def inc(self, i, j):
-        '''
-        Инкремент элемента (i,j)
-        :param i: номер строки
-        :param j: номер столбца
-        :return: None
-        '''
-        self.matrix[i][j] += 1
-
-    def append_str(self):
-        '''
-        Добавляет строку в матрицу
-        :return: None
-        '''
-        for col in self.matrix:
-            col.append(0)
-        self.m += 1
+file_immitation = ['Трудоустройство: трудоустройств работ ваканс зарплат смен резюм',
+'Жалоба: жалоб недовольств пода грубост обид разозл медлен неправильн',
+'Наличие товара: налич товар полк ест магазин',
+'Стоимость товара: скольк сто акц цен товар стоимост',
+'Утеря вещей в магазине: магазин вещ забра найт нашл утеря потер сумк' ]
 
 
 class FrequenciesMatrix(object):
@@ -54,55 +24,105 @@ class FrequenciesMatrix(object):
     Класс для работы с матрицой частотности термов на предложение
     Для хранения частот используется матрица, в которой строкам отвечает терм, а столбцам - предложение
     '''
-    __word_counter = 0
-    __hash_list = dict()
 
     def __init__(self, sentences):
         '''
         Создает частотную матрицу по списку предложений
         :param sentences: список предложений разбитых на слова
         '''
-        self.keys = dict()  # Обратные ключи, чтобы восстановить из номера строки слово  !!УБРАТЬ ЭТО!!
-        table = DynamicMatrix(1, len(sentences))  # Заготовка матрицы по количеству предложений
-        sentences_counter = 0
-
+        # Составления списка из всех слов
+        self.word_list = []
         for sentence in sentences:
             for word in sentence:
-                word_position = self.__hash(word)
+                if word not in self.word_list:
+                    self.word_list.append(word)
 
-                if word_position == -1:  # Значит слово ещё не встречалось
-                    word_position = self.__word_counter
-                    self.keys[self.__word_counter] = word
-                    table.append_str()
-                    self.__word_counter += 1
-                table.inc(sentences_counter, word_position)
+        self.word_list.sort()  # Лексикографический порядок !!!НУЖНО УБЕДИТЬСЯ, ЧТО СОРТИРОВАТЬ СЛОВА ВЫГОДНО!!!
+        self.word_hash = dict()
+        for i in range(len(self.word_list)):
+            self.word_hash[self.word_list[i]] = i
 
+        self.freq_matrix = np.zeros((len(self.word_list), len(sentences)))  # Нулевая матрица mxn
+        sentences_counter = 0
+        for sentence in sentences:
+            for word in sentence:
+                self.freq_matrix[self.word_hash[word]][sentences_counter] += 1  # Увеличиваем вес слова в текщем предлож
             sentences_counter += 1  # Конец обработки предложения
 
-        self.freq_matrix = np.array(table.matrix).transpose()
-
-    def __hash(self, word):
+    def def_k(self):
         '''
-        Функция, сопоставляющяя слову его номер строки
-        :param word: слово
-        :return: номер строки
+        Здесь могла бы быть ваша реклама
+        :return: 2
         '''
-        try:
-            # Слово уже встречалось и номер его строки есть в словаре _hash_list
-            return self.__hash_list[word]
-        except KeyError:
-            # Слово ещё не встречалось
-            self.__hash_list[word] = self.__word_counter
-            return -1
+        return 2
 
 
-b = FrequenciesMatrix(sentences_list)
-b.freq_matrix = b.freq_matrix[0: -1]  # КОСТЫЛЬ Не критический
-U, S, Vt = np.linalg.svd(b.freq_matrix, full_matrices=True)
-# Ниже заготовочка для "построения графика" в к-мерном пространстве
-k = 2
-U = U[0:k]
-Vt.transpose()
-Vt = Vt[0:k]
-Vt.transpose()
-# Остались к строк и столбцов, все слова выражаются к компонентами, нужно найти предложение, к которой слово ближе всего
+def load_topics(file):
+    '''
+    Пока принимает список строк с темами
+    :param file: список строк с темами
+    :return: словарь (тема: ключевые слова)
+    '''
+    res = dict()
+    for group in file:
+        topic, keywords = group.split(':')
+        res[topic] = keywords.split()
+    return res
+
+
+def major_topics(weight_dict):
+    '''
+    Определяет основные темы разговора по их суммарным весам
+    :param weight_dict: словарь (тема: вес)
+    :return: список основных тем
+    '''
+    return None  # Здесь точно будет ваша реклама
+
+
+def topics(sentences_list):
+    '''
+    Основная функция модуля определения тематики разговора
+    !!!ЧАСТЬ ЭТОЙ ФУНКЦИИ НУЖНО УПАКОВАТЬ В ОТДЕЛЬНЫЕ ПОДФУНКЦИИ!!!
+    :param sentences_list: список предложений, разбитых по словам list(list(str()))
+    :return: список тем разговора list(str())
+    '''
+    b = FrequenciesMatrix(sentences_list)
+    U, S, Vt = np.linalg.svd(b.freq_matrix, full_matrices=False)
+    
+    #  Округление для наглядности
+    U = np.round(U, 2).transpose()
+    S = np.round(S, 2)
+    Vt = np.round(Vt, 2)
+
+    k = b.def_k()
+    U = U[0:k]
+    S = S[0:k]
+    Vt = Vt[0:k]
+
+    S1 = np.zeros((k, k))
+    for i in range(k):
+        S1[i][i] = S[i]
+
+    # Восстановление матрицы без шумов, с учётом латентных семантических связей
+    # Слово может не присутствовать в предложении, однако иметь в итоговой матрице в этом предложении вес
+    U = U.transpose()
+    U = U.dot(S1)  # dot - умножение матрицы на матрицу/вектор
+    res_matrix = U.dot(Vt)
+
+    topics_list = load_topics(file_immitation)
+    weights = dict()  # Словарь для итоговых весов каждой темы
+    # Смысл уродского цикла ниже:
+    # Для каждой темы из файла суммируем веса слов, которые относятся к этим темам и встретились в диалоге(есть в матрице)
+    for topic in topics_list:
+        for keyword in topics_list[topic]:
+            try:
+                str_num = b.word_hash[keyword]  # Если такое слово встретилось, то узнаем его номер
+                try:  # Тема уже встречалась в диалоге
+                    weights[topic] += np.sum(res_matrix[str_num])  # Добавляем веса по всем предложениям
+                except KeyError:  # Тема встретилась или была найдена впервые
+                    weights[topic] = 0
+            except KeyError:
+                pass
+
+
+topics(sentences_list)
