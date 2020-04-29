@@ -1,0 +1,30 @@
+** Запрос выводит информацию о звонках(дата и время принятия, тема, команда оператора, id клиента)
+** по заданному временному отрезку(в данном случае это от 19-10-2004 до 23-10-2004)
+
+SELECT dt.date_time_accept, inf.id_client, op.operator_team, rec.topic
+FROM date_time dt 
+LEFT JOIN information inf ON dt.id_date_time = inf.id_information 
+LEFT JOIN operator op ON op.id_operator = inf.id_operator
+LEFT JOIN record rec ON rec.id_information = inf.id_information
+WHERE date_time_accept > date '19-10-2004' AND date_time_accept < date '23-10-2004';
+
+** Запрос выводит информацию о звонках(дата и время принятия, тема, команда оператора, id клиента)
+** по команде оператора(в данном случае это "2")
+
+SELECT dt.date_time_accept, inf.id_client, op.operator_team, rec.topic
+FROM operator op 
+LEFT JOIN information inf ON op.id_operator = inf.id_operator 
+LEFT JOIN date_time dt ON dt.id_date_time = inf.id_date_time
+LEFT JOIN record rec ON rec.id_information = inf.id_information
+WHERE operator_team = '2';
+
+** Запрос выводит информацию о звонках(дата и время принятия, тема, команда оператора, id клиента)
+** по номеру клиента(в данном случае это 89329)
+
+SELECT dt.date_time_accept, inf.id_client, op.operator_team, rec.topic
+FROM client cl 
+LEFT JOIN information inf ON cl.id_client = inf.id_client
+LEFT JOIN date_time dt ON dt.id_date_time = inf.id_date_time
+LEFT JOIN record rec ON rec.id_information = inf.id_information
+LEFT JOIN operator op ON op.id_operator = inf.id_operator
+WHERE phone_number = 89329;
