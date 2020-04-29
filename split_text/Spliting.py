@@ -1,5 +1,6 @@
 from nltk.tokenize import word_tokenize
 from nltk.stem import SnowballStemmer
+from nltk.corpus import stopwords
 
 #Разделяем текст на слова, словами также явялются метки (скобки).
 #На входе строка с именем файла. На выходе список разделенных слов.
@@ -32,13 +33,22 @@ def stemming(words):
     result = [stemmer.stem(word) for word in words]
     return result
 
+#Удалаяет стоп-слова. На входе список слов words и список дополнительных стоп слов. На выходе список без стоп-слов.
+def del_words(words, extra_words):
+    new_words = list()
+    stop_words = list(stopwords.words('russian'))
+    stop_words.extend(extra_words)
+    for word in words:
+        if word not in stop_words:
+            new_words.append(word)
+    return new_words
+
 #Разделение текста на блоки слов, уже нормализованных стеммингом. На входе имя файла и количество слов в блоке.
 #На выходе список блоков слов заданного размера.
-def spliting(file, num_of_words):
+def splitting(file, num_of_words):
     words = split_text(file)
+    words = del_words(words, ['.'])
     #в идеале на этой строке должна располагаться функция, отбрасывающая стоп-слова
     words = stemming(words)
     blocks_of_words = unite_in_blocks(words, num_of_words)
     return blocks_of_words
-
-
