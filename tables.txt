@@ -1,8 +1,7 @@
----Поля `direction_call` (направление вызова) и `status_ending` (статус завершения) в таблице `information` и поле `blacklist` 
-в таблице `client`
+---Поля `direction_call` (направление вызова) и `status_ending` (статус завершения) в таблице `information` и поле `blacklist` в таблице `client`
 ---предлагаю хранить в int и каждой цифре присвоить свое значение статуса
 ---Например,
----`direction_call`
+---`derection_call`
 ---	1-входящий
 ---	2-исходящий
 ---	3-внутренний
@@ -15,87 +14,78 @@
 ---	0-клиент не в черном списке
 ---	1-клиент в черном списке
 
-CREATE TABLE `record` (
-  `id_record` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `id_information` INTEGER NULL DEFAULT NULL,
-  `id_mark` INTEGER NULL DEFAULT NULL,
-  `title_mp3` CHAR(30) NULL DEFAULT NULL,
-  `transcript` CHAR(30) NULL DEFAULT NULL,
-  `topic` CHAR(30) NULL DEFAULT NULL,
-  PRIMARY KEY (`id_record`)
+CREATE TABLE record (
+  id_record  SERIAL PRIMARY KEY,
+  id_information INTEGER DEFAULT NULL,
+  id_mark INTEGER DEFAULT NULL,
+  title_mp3 VARCHAR(30) UNIQUE DEFAULT NULL,
+  transcript VARCHAR(30) UNIQUE DEFAULT NULL,
+  topic VARCHAR(30) DEFAULT NULL
 );
 
 		
-CREATE TABLE `information` (
-  `id_information` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `id_date_time` INTEGER NULL DEFAULT NULL,
-  `id_operator` INTEGER NULL DEFAULT NULL,
-  `direction_call` INT NULL DEFAULT NULL,
-  `id_client` INTEGER NULL DEFAULT NULL,
-  `status_ending` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`id_information`)
+CREATE TABLE information (
+  id_information SERIAL PRIMARY KEY,
+  id_date_time INTEGER DEFAULT NULL,
+  id_operator INTEGER DEFAULT NULL,
+  direction_call INTEGER DEFAULT NULL,
+  id_client INTEGER  DEFAULT NULL,
+  status_ending INTEGER DEFAULT NULL
 );
 
 		
-CREATE TABLE `date_time` (
-  `id_date_time` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `date_time_accept` DATETIME NULL DEFAULT NULL,
-  `date_time_start` DATETIME NULL DEFAULT NULL,
-  `date_time_end` DATETIME NULL DEFAULT NULL,
-  `duration` TIME NULL DEFAULT NULL,
-  PRIMARY KEY (`id_date_time`)
+CREATE TABLE date_time (
+  id_date_time SERIAL PRIMARY KEY,
+  date_time_accept TIMESTAMP DEFAULT NULL,
+  date_time_start TIMESTAMP DEFAULT NULL,
+  date_time_end TIMESTAMP DEFAULT NULL,
+  duration TIME DEFAULT NULL
 );
 	
-CREATE TABLE `operator` (
-  `id_operator` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `operator_team` CHAR(30) NULL DEFAULT NULL,
-  PRIMARY KEY (`id_operator`)
+CREATE TABLE operator (
+  id_operator SERIAL PRIMARY KEY,
+  operator_team VARCHAR(30) DEFAULT NULL
 );
 		
-CREATE TABLE `mark_system` (
-  `id_mark_system` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `date_time_mark_system` DATETIME NULL DEFAULT NULL,
-  `mark_system` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`id_mark_system`)
+CREATE TABLE mark_system (
+  id_mark_system SERIAL PRIMARY KEY,
+  date_time_mark_system TIMESTAMP DEFAULT NULL,
+  mark_system INTEGER DEFAULT NULL
 );
 		
-CREATE TABLE `mark_inspector` (
-  `id_mark_inspector` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `date_time_mark_inspector` DATETIME NULL DEFAULT NULL,
-  `id_inspector` INTEGER NULL DEFAULT NULL,
-  `comment` MEDIUMTEXT NULL DEFAULT NULL,
-  `mark_inspector` INTEGER NULL DEFAULT NULL,
-  PRIMARY KEY (`id_mark_inspector`)
+CREATE TABLE mark_inspector (
+  id_mark_inspector SERIAL PRIMARY KEY,
+  date_time_mark_inspector TIMESTAMP DEFAULT NULL,
+  id_inspector INTEGER DEFAULT NULL,
+  comment TEXT DEFAULT NULL,
+  mark_inspector INTEGER DEFAULT NULL
 );
 	
-CREATE TABLE `inspector` (
-  `id_inspector` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `name` CHAR(30) NULL DEFAULT NULL,
-  PRIMARY KEY (`id_inspector`)
+CREATE TABLE inspector (
+  id_inspector SERIAL PRIMARY KEY,
+  name VARCHAR(30) DEFAULT NULL
 );
 		
-CREATE TABLE `client` (
-  `id_client` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `phone_number` INT NULL DEFAULT NULL,
-  `blacklist` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`id_client`)
+CREATE TABLE client (
+  id_client SERIAL PRIMARY KEY,
+  phone_number INTEGER DEFAULT NULL,
+  blacklist INTEGER DEFAULT NULL
 );
 
 	
-CREATE TABLE `mark` (
-  `id_mark` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `id_mark_inspector` INTEGER NULL DEFAULT NULL,
-  `id_mark_system` INTEGER NULL DEFAULT NULL,
-  `mark_client` INTEGER NULL DEFAULT NULL,
-  PRIMARY KEY (`id_mark`)
+CREATE TABLE mark (
+  id_mark SERIAL PRIMARY KEY,
+  id_mark_inspector INTEGER DEFAULT NULL,
+  id_mark_system INTEGER DEFAULT NULL,
+  mark_client INTEGER DEFAULT NULL
 );
 
 
-ALTER TABLE `record` ADD FOREIGN KEY (id_information) REFERENCES `information` (`id_information`);
-ALTER TABLE `record` ADD FOREIGN KEY (id_mark) REFERENCES `mark` (`id_mark`);
-ALTER TABLE `information` ADD FOREIGN KEY (id_date_time) REFERENCES `date_time` (`id_date_time`);
-ALTER TABLE `information` ADD FOREIGN KEY (id_operator) REFERENCES `operator` (`id_operator`);
-ALTER TABLE `information` ADD FOREIGN KEY (id_client) REFERENCES `client` (`id_client`);
-ALTER TABLE `mark_inspector` ADD FOREIGN KEY (id_inspector) REFERENCES `inspector` (`id_inspector`);
-ALTER TABLE `mark` ADD FOREIGN KEY (id_mark_inspector) REFERENCES `mark_inspector` (`id_mark_inspector`);
-ALTER TABLE `mark` ADD FOREIGN KEY (id_mark_system) REFERENCES `mark_system` (`id_mark_system`);
+ALTER TABLE record ADD FOREIGN KEY (id_information) REFERENCES information (id_information);
+ALTER TABLE record ADD FOREIGN KEY (id_mark) REFERENCES mark (id_mark);
+ALTER TABLE information ADD FOREIGN KEY (id_date_time) REFERENCES date_time (id_date_time);
+ALTER TABLE information ADD FOREIGN KEY (id_operator) REFERENCES operator (id_operator);
+ALTER TABLE information ADD FOREIGN KEY (id_client) REFERENCES client (id_client);
+ALTER TABLE mark_inspector ADD FOREIGN KEY (id_inspector) REFERENCES inspector (id_inspector);
+ALTER TABLE mark ADD FOREIGN KEY (id_mark_inspector) REFERENCES mark_inspector (id_mark_inspector);
+ALTER TABLE mark ADD FOREIGN KEY (id_mark_system) REFERENCES mark_system (id_mark_system);
