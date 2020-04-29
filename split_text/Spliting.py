@@ -33,7 +33,7 @@ def stemming(words):
     result = [stemmer.stem(word) for word in words]
     return result
 
-#Удалаяет стоп-слова. На входе список слов words и список дополнительных стоп слов. На выходе список без стоп-слов.
+#Удалаяет стоп-слова. На входе список слов words и список дополнительных стоп-слов. На выходе список без стоп-слов.
 def del_words(words, extra_words):
     new_words = list()
     stop_words = list(stopwords.words('russian'))
@@ -48,7 +48,6 @@ def del_words(words, extra_words):
 def splitting(file, num_of_words):
     words = split_text(file)
     words = del_words(words, ['.'])
-    #в идеале на этой строке должна располагаться функция, отбрасывающая стоп-слова
     words = stemming(words)
     blocks_of_words = unite_in_blocks(words, num_of_words)
     return blocks_of_words
