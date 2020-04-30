@@ -48,3 +48,17 @@ LEFT JOIN mark_inspector mi ON mi.id_mark_inspector = mk.id_mark_inspector
 LEFT JOIN mark_system ms ON ms.id_mark_system = mk.id_mark_system
 LEFT JOIN record rec ON rec.id_mark = mk.id_mark
 WHERE abs(ms.mark_system - mi.mark_inspector) = 1;
+
+** Запрос выводит выборку оценок котролера(id контролера, имя, дата и время оценки, комментарий, оценка)
+** по его id
+
+SELECT it.id_inspector, it.name, mi.date_time_mark_inspector, mi.comment, mi.mark_inspector
+FROM mark_inspector mi
+LEFT JOIN inspector it ON it.id_inspector = mi.id_inspector
+WHERE mi.id_mark_inspector = 3;
+
+** Запрос выводит список клиентов в черном списке(id клиента, номер телефона)
+
+SELECT cl.id_client, cl.phone_number
+FROM client cl
+WHERE cl.blacklist = 1;
