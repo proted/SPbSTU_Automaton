@@ -28,3 +28,23 @@ LEFT JOIN date_time dt ON dt.id_date_time = inf.id_date_time
 LEFT JOIN record rec ON rec.id_information = inf.id_information
 LEFT JOIN operator op ON op.id_operator = inf.id_operator
 WHERE phone_number = 89329;
+
+** Запрос выводит информацию о звонках(дата и время принятия, тема, команда оператора, id клиента)
+** по теме звонка(в данном случае это 'жалоба')
+
+SELECT dt.date_time_accept, inf.id_client, op.operator_team, rec.topic
+FROM record rec 
+LEFT JOIN information inf ON rec.id_information = inf.id_information
+LEFT JOIN date_time dt ON dt.id_date_time = inf.id_date_time
+LEFT JOIN operator op ON op.id_operator = inf.id_operator
+WHERE topic = 'жалоба';
+
+** Запрос выводит информацию о звонке(id звонка, оценка контролера, оценка системы)
+** где эти оценки отличаются на k(в данном случае 1)
+
+SELECT rec.id_record, mi.mark_inspector, ms.mark_system
+FROM mark mk
+LEFT JOIN mark_inspector mi ON mi.id_mark_inspector = mk.id_mark_inspector
+LEFT JOIN mark_system ms ON ms.id_mark_system = mk.id_mark_system
+LEFT JOIN record rec ON rec.id_mark = mk.id_mark
+WHERE abs(ms.mark_system - mi.mark_inspector) = 1;
