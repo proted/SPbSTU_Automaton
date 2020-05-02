@@ -3,11 +3,18 @@
 #from vosk import Model, KaldiRecognizer
 import sys
 #import os
+<<<<<<< HEAD
 import wave
 from convert import conv_mp3_to_wav
 from recognize import recognize 
 from infile import save_in_file
 from downsample import reset_sample
+=======
+#import wave
+from convert import conv_mp3_to_wav
+from recognize import recognize 
+from infile import save_in_file
+>>>>>>> first commit
 
 audio = sys.argv[1]
 audio = conv_mp3_to_wav(str(audio))
@@ -19,6 +26,7 @@ out = out.replace('wav','txt')
 out = "text/" + out
 
 save_in_file(result,out)
+<<<<<<< HEAD
 sample_list = [8000, 16000, 32000, 48000]
 wf = wave.open(path, "rb")
 sample = wf.getframerate()
@@ -35,3 +43,5 @@ if sample not in sample_list:
 	#wf = wave.open(path, "rb")
 	#sample = wf.getframerate()
 	#print(sample)
+=======
+>>>>>>> first commit
