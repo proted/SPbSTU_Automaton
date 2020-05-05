@@ -54,13 +54,11 @@ def del_words(words, extra_words):
             new_words.append(word)
     return new_words
 
-
 #Разделение текста на блоки слов, уже нормализованных стеммингом. На входе имя файла и количество слов в блоке.
 #На выходе список блоков слов заданного размера.
 def splitting(file, num_of_words):
     words = split_text(file)
     words = del_words(words, ['Speaker'])
-    #в идеале на этой строке должна располагаться функция, отбрасывающая стоп-слова
     words = stemming(words)
     blocks_of_words = unite_in_blocks(words, num_of_words)
     return blocks_of_words
