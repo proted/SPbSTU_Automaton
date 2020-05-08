@@ -4,7 +4,7 @@ from nltk.stem import SnowballStemmer
 from nltk.corpus import stopwords
 import re
 
-#Разделяем текст на слова, словами также явялются метки (скобки).
+#Разделяем текст на слова и удаляем "не слова" (цифры, скобки, знаки препинания).
 #На входе строка с именем файла. На выходе список разделенных слов.
 def split_text(file):
     fp = open(file, 'r', encoding='windows-1251')
@@ -14,7 +14,7 @@ def split_text(file):
     words = word_tokenize(text, "russian")
     return words
 
-#Удаляет все 'не слова', т.е. цифры, числа, знаки препинания. На входе текст, на выходе текст без лишних символов.
+#Удаляет все 'не слова', т.е. цифры, числа, знаки препинания. На входе текст (строка), на выходе текст без лишних символов (строка).
 def del_non_words(text):
     pattern = r"[0-9]"
     pattern2 = r"[^\w]"
@@ -23,7 +23,7 @@ def del_non_words(text):
     return text
 
 #Разбиваем все слова на блоки из слов.
-#На входе список слов words и количество слов в одном блоке num_of_words. Пока не закончились слова, возвращает блоки.
+#На входе список слов words и количество слов (int) в одном блоке num_of_words. Пока не закончились слова, возвращает блоки.
 def chunked(words, num_of_words):
     current = 0
     while True:
@@ -34,7 +34,7 @@ def chunked(words, num_of_words):
         else:
             break
 
-#Обёртка для функции chunked. На входе те же данные. На выходе список из блоков слов.
+#Обёртка для функции chunked. На входе список слов words и количество слов (int). На выходе список из блоков слов.
 def unite_in_blocks(words, num_of_words):
     return list(chunked(words, num_of_words))
 
@@ -44,7 +44,7 @@ def stemming(words):
     result = [stemmer.stem(word) for word in words]
     return result
 
-#Удалаяет стоп-слова. На входе список слов words и список дополнительных стоп слов. На выходе список без стоп-слов.
+#Удалаяет стоп-слова. На входе список слов words и список дополнительных стоп-слов. На выходе список без стоп-слов.
 def del_words(words, extra_words):
     new_words = list()
     stop_words = list(stopwords.words('russian'))
