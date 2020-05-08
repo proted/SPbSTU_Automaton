@@ -1,4 +1,4 @@
-from spliting import splitting
+from splitting import splitting
 from singular_decomposition import topics
 
 
