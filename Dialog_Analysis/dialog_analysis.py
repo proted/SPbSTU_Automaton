@@ -2,8 +2,5 @@ from splitting import splitting
 from singular_decomposition import topics
 
 
-def topics_of_dialogue(text):
+def topics_of_dialogue(text, ID):
     return topics(splitting(text, 10))
-
-
-print(topics_of_dialogue('test.txt'))
