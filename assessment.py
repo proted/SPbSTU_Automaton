@@ -12,11 +12,23 @@ def read_file(file):
      return text
 
 
+#Принимает словарь res с результатами проверок и id разговора, возвращает имя файла, в который записан результат
+def create_log(res, id):
+    name = "desc_"+id
+    file = open(name, "w")
+    for key in res.keys():
+        file.write(str(key) + str(res[key]) + '\n')
+    file.close()
+    return name
+
+
 #Функция проверяет разговор на наличие перебиваний, нецензурной лексики и слов-паразитов.
 #На входе строка с именем файла.
-def assessment(file):
+def assessment(file, id):
+    res = dict()
     text = read_file(file)
     interruptions = interrupting(text)
     text = o_phrases(text)
-    obsc = search_phrases(text, obscene)
-    par = search_phrases(text, parasites)
+    res['мат'] = search_phrases(text, obscene)
+    res['слова парзиты'] = search_phrases(text, parasites)
+    return create_log(res, id)
