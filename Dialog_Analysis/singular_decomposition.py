@@ -2,23 +2,15 @@ import numpy as np
 from math import fabs
 
 
-file_immitation = ['Трудоустройство: трудоустройств работ ваканс зарплат смен резюм',
-'Жалоба: жалоб недовольств пода грубост обид разозл медлен неправильн',
-'Наличие товара: налич товар полк ест магазин',
-'Стоимость товара: скольк сто акц цен товар стоимост',
-'Утеря вещей в магазине: магазин вещ забра найт нашл утеря потер сумк' ]
-
-
 class FrequenciesMatrix(object):
     '''
     Класс для работы с матрицой частотности термов на предложение
     Для хранения частот используется матрица, в которой строкам отвечает терм, а столбцам - предложение
     '''
-
     def __init__(self, sentences):
         '''
         Создает частотную матрицу по списку предложений
-        :param sentences: список предложений разбитых на слова
+        :param sentences: список предложений разбитых на слова list(str())
         '''
         # Составления списка из всех слов
         self.word_list = []
@@ -27,7 +19,7 @@ class FrequenciesMatrix(object):
                 if word not in self.word_list:
                     self.word_list.append(word)
 
-        self.word_list.sort()  # Лексикографический порядок !!!НУЖНО УБЕДИТЬСЯ, ЧТО СОРТИРОВАТЬ СЛОВА ВЫГОДНО!!!
+        self.word_list.sort()  # Лексикографический порядок
         self.word_hash = dict()
         for i in range(len(self.word_list)):
             self.word_hash[self.word_list[i]] = i
@@ -41,42 +33,48 @@ class FrequenciesMatrix(object):
 
     def def_k(self):
         '''
-        Здесь могла бы быть ваша реклама
-        :return: 2
+        Возвращает число строк, которые нужно оставить после сингулярного разложения
+        return: 2  int()
         '''
         return 2
 
 
-def load_topics(file):
+def load_topics():
     '''
-    Пока принимает список строк с темами
-    :param file: список строк с темами
-    :return: словарь (тема: ключевые слова)
+    Загружает темы из файла, имя которого определено константно, возвращает словарь тем из этого файла
+    :param file: имя файла (str())
+    :return: dict()
     '''
+    file_name = "topics.txt"
+    file = open(file_name, "r")
     res = dict()
     for group in file:
         topic, keywords = group.split(':')
         res[topic] = keywords.split()
+    f.close()
     return res
 
 
 def major_topics(weight_dict):
     '''
-    Определяет основные темы разговора по их суммарным весам
-    :param weight_dict: словарь (тема: вес)
-    :return: список основных тем
+    Определяет основные темы разговора по их суммарным весам, возвращает отсортированный список тем с весом больше 0.4
+    :param weight_dict: dict()
+    :return: list(str())
     '''
     res_list = list()
     for key in weight_dict.keys():
         if weight_dict[key] > 0.4:
-            res_list.append(key)
-    return res_list
+            res_list.append((key, weight_dict[key]))
+    res_list.sort(key=lambda i: i[1])
+    sorted_list = list()
+    for i in res_list:
+        sorted_list.append(i[0])
+    return sorted_list
 
 
 def topics(sentences_list):
     '''
     Основная функция модуля определения тематики разговора
-    !!!ЧАСТЬ ЭТОЙ ФУНКЦИИ НУЖНО УПАКОВАТЬ В ОТДЕЛЬНЫЕ ПОДФУНКЦИИ!!!
     :param sentences_list: список предложений, разбитых по словам list(list(str()))
     :return: список тем разговора list(str())
     '''
@@ -87,12 +85,12 @@ def topics(sentences_list):
     U = np.round(U, 2).transpose()
     S = np.round(S, 2)
     Vt = np.round(Vt, 2)
-
+    #Отсечение шумов
     k = b.def_k()
     U = U[0:k]
     S = S[0:k]
     Vt = Vt[0:k]
-
+    #Функция СВД возвращает массив для диагональной матрицы, восстанавливаем матрицу из массива ниже
     S1 = np.zeros((k, k))
     for i in range(k):
         S1[i][i] = S[i]
@@ -103,9 +101,9 @@ def topics(sentences_list):
     U = U.dot(S1)
     res_matrix = U.dot(Vt)
 
-    topics_list = load_topics(file_immitation)
+    topics_list = load_topics()
     weights = dict()  # Словарь для итоговых весов каждой темы
-    # Смысл уродского цикла ниже:
+    # Смысл цикла ниже:
     # Для каждой темы из файла мы суммируем веса слов, которые относятся к этим темам и встретились в диалоге
     for topic in topics_list:
         for keyword in topics_list[topic]:
