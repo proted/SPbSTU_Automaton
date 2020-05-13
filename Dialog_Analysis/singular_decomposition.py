@@ -52,7 +52,7 @@ def load_topics():
     for group in file:
         topic, keywords = group.split(':')
         res[topic] = keywords.split()
-    f.close()
+    file.close()
     return res
 
 
@@ -70,6 +70,8 @@ def major_topics(weight_dict):
     sorted_list = list()
     for i in res_list:
         sorted_list.append(i[0])
+    if len(sorted_list) == 0:
+         sorted_list.append('Другое')
     return sorted_list
 
 
