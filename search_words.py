@@ -27,6 +27,12 @@ parasites = ['как бы', 'собственно', 'говоря', 'таким 
 
 
 def search_phrases(text, ness_phrases):
+    '''
+    Ищет вхождения фраз из списка ness_phrases в тексте 
+    :param text: str  -  тектс оператора
+    :param ness_phrases: list(str)  -  список фраз
+    :return:  int  -  фразы были найдены
+    '''
     for phrase in ness_phrases:
         pattern = phrase
         res = re.search(pattern, text)
