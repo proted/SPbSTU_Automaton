@@ -66,7 +66,7 @@ def major_topics(weight_dict):
     for key in weight_dict.keys():
         if weight_dict[key] > 0.4:
             res_list.append((key, weight_dict[key]))
-    res_list.sort(key=lambda i: i[1])
+    res_list.sort(key=lambda i: i[1], reverse=True)
     sorted_list = list()
     for i in res_list:
         sorted_list.append(i[0])
