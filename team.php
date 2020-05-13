@@ -22,8 +22,16 @@
         <?php
             if(!empty($_POST["team"])){
                 require_once 'connection.php';
-                $link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базу данных" . mysqli_error($link));
-                $sql = mysqli_query($link, 
+                //$link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базу данных" . mysqli_error($link));
+                $link = pg_connect($host, $user, $password, $database) or die("Ошибка подключения к базу данных" . pg_result_error($link));
+                /*$sql = mysqli_query($link, 
+                "SELECT dt.date_time_accept, inf.id_client, op.operator_team, rec.topic
+                FROM operator op 
+                LEFT JOIN information inf ON op.id_operator = inf.id_operator 
+                LEFT JOIN date_time dt ON dt.id_date_time = inf.id_date_time
+                LEFT JOIN record rec ON rec.id_information = inf.id_information
+                WHERE operator_team = '{$_POST['team']}'");*/
+                $sql = pg_query($link, 
                 "SELECT dt.date_time_accept, inf.id_client, op.operator_team, rec.topic
                 FROM operator op 
                 LEFT JOIN information inf ON op.id_operator = inf.id_operator 
@@ -31,7 +39,8 @@
                 LEFT JOIN record rec ON rec.id_information = inf.id_information
                 WHERE operator_team = '{$_POST['team']}'");
                 if ($sql) {
-                    $rows = mysqli_num_rows($sql);
+                    //$rows = mysqli_num_rows($sql);
+                    $rows = pg_num_rows($sql);
                     echo "<table  border=1  cellspacing=0 cellpading=0>
                     <tread>
                     <tr>
@@ -43,7 +52,8 @@
                     <tread>";
                     echo "<tbody>";
                     for($i=1;$i<=$rows;++$i) {
-                        $row=mysqli_fetch_row($sql);
+                        //$row=mysqli_fetch_row($sql);
+                        $row=pg_fetch_row($sql);
                         echo "<tr>";
                         for ($j=0; $j<4; ++$j) {
                             echo "<td>$row[$j]</td>";
@@ -52,9 +62,11 @@
                     }
                     echo "</tbody>";
                     echo "</table>";
-                    mysqli_free_result($sql);
+                    //mysqli_free_result($sql);
+                    pg_free_result($sql);
                 }
-                mysqli_close($link);
+                //mysqli_close($link);
+                pg_close($link);
             }
         ?>
     </div>
