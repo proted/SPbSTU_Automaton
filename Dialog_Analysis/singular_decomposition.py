@@ -7,10 +7,11 @@ class FrequenciesMatrix(object):
     Класс для работы с матрицой частотности термов на предложение
     Для хранения частот используется матрица, в которой строкам отвечает терм, а столбцам - предложение
     '''
+
     def __init__(self, sentences):
         '''
         Создает частотную матрицу по списку предложений
-        :param sentences: список предложений разбитых на слова list(str())
+        :param sentences: list(str())  -  список предложений разбитых на слова
         '''
         # Составления списка из всех слов
         self.word_list = []
@@ -34,7 +35,7 @@ class FrequenciesMatrix(object):
     def def_k(self):
         '''
         Возвращает число строк, которые нужно оставить после сингулярного разложения
-        return: 2  int()
+        return: int()  -  число значимых строк и столбцов
         '''
         return 2
 
@@ -42,8 +43,8 @@ class FrequenciesMatrix(object):
 def load_topics():
     '''
     Загружает темы из файла, имя которого определено константно, возвращает словарь тем из этого файла
-    :param file: имя файла (str())
-    :return: dict()
+    :param file: str()  -  имя файла, где содержатся темы с ключевыми словами
+    :return: dict()  -  тема : список слов по этой теме
     '''
     file_name = "topics.txt"
     file = open(file_name, "r")
@@ -58,8 +59,8 @@ def load_topics():
 def major_topics(weight_dict):
     '''
     Определяет основные темы разговора по их суммарным весам, возвращает отсортированный список тем с весом больше 0.4
-    :param weight_dict: dict()
-    :return: list(str())
+    :param weight_dict: dict()  -  словарь тем, которые встретились в разговоре (тема : вес)
+    :return: list(str())  -  отсортированный по весам список тем разговора, которые набрали вес >0.4
     '''
     res_list = list()
     for key in weight_dict.keys():
@@ -75,22 +76,22 @@ def major_topics(weight_dict):
 def topics(sentences_list):
     '''
     Основная функция модуля определения тематики разговора
-    :param sentences_list: список предложений, разбитых по словам list(list(str()))
-    :return: список тем разговора list(str())
+    :param sentences_list: list(list(str()))  -  список предложений, разбитых по словам (разговор)
+    :return: list(str())  -  список тем разговора
     '''
     b = FrequenciesMatrix(sentences_list)
     U, S, Vt = np.linalg.svd(b.freq_matrix, full_matrices=False)
-    
+
     #  Округление для наглядности
     U = np.round(U, 2).transpose()
     S = np.round(S, 2)
     Vt = np.round(Vt, 2)
-    #Отсечение шумов
+    # Отсечение шумов
     k = b.def_k()
     U = U[0:k]
     S = S[0:k]
     Vt = Vt[0:k]
-    #Функция СВД возвращает массив для диагональной матрицы, восстанавливаем матрицу из массива ниже
+    # Функция СВД возвращает массив для диагональной матрицы, восстанавливаем матрицу из массива ниже
     S1 = np.zeros((k, k))
     for i in range(k):
         S1[i][i] = S[i]
@@ -104,7 +105,7 @@ def topics(sentences_list):
     topics_list = load_topics()
     weights = dict()  # Словарь для итоговых весов каждой темы
     # Смысл цикла ниже:
-    # Для каждой темы из файла мы суммируем веса слов, которые относятся к этим темам и встретились в диалоге
+    # Для каждой темы из файла суммируем веса слов, которые относятся к этим темам и встретились в диалоге
     for topic in topics_list:
         for keyword in topics_list[topic]:
             try:
