@@ -43,6 +43,6 @@ def assessment(file, id):
     text = read_file(file)
     interruptions = interrupting(text)
     text = o_phrases(text)
-    res['мат'] = search_phrases(text, obscene)
-    res['слова парзиты'] = search_phrases(text, parasites)
+    res['мат'] = search_phrases(text, read_file('obscene.txt').split('\n'))
+    res['слова парзиты'] = search_phrases(text, read_file('parasites.txt').split('\n'))
     return create_log(res, id)
