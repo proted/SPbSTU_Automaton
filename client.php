@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Поиск по клиенту</title>
@@ -22,24 +22,28 @@
         <?php
             if(!empty($_POST["number"])){
                 require_once 'connection.php';
-                //$link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базу данных" . mysqli_error($link));
-                $link = pg_connect($host, $user, $password, $database) or die("Ошибка подключения к базу данных" . pg_result_error($link));
+                //$link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
+                $link = pg_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . pg_result_error($link));
                 /*$sql = mysqli_query($link, 
-                "SELECT dt.date_time_accept, inf.id_client, op.operator_team, rec.topic
-                FROM client cl 
+                "SELECT dt.date_time_accept, cl.phone_number, op.operator_team, top.name
+                FROM client cl
                 LEFT JOIN information inf ON cl.id_client = inf.id_client
                 LEFT JOIN date_time dt ON dt.id_date_time = inf.id_date_time
                 LEFT JOIN record rec ON rec.id_information = inf.id_information
                 LEFT JOIN operator op ON op.id_operator = inf.id_operator
-                WHERE phone_number = '{$_POST['number']}';");*/
+                LEFT JOIN record_topic rec_t ON rec_t.id_record=rec.id_record
+                LEFT JOIN topic top ON top.id_topic=rec_t.id_topic
+                WHERE phone_number= '{$_POST['number']}';");*/
                 $sql = pg_query($link, 
-                "SELECT dt.date_time_accept, inf.id_client, op.operator_team, rec.topic
-                FROM client cl 
+                "SELECT dt.date_time_accept, cl.phone_number, op.operator_team, top.name
+                FROM client cl
                 LEFT JOIN information inf ON cl.id_client = inf.id_client
                 LEFT JOIN date_time dt ON dt.id_date_time = inf.id_date_time
                 LEFT JOIN record rec ON rec.id_information = inf.id_information
                 LEFT JOIN operator op ON op.id_operator = inf.id_operator
-                WHERE phone_number = '{$_POST['number']}';");
+                LEFT JOIN record_topic rec_t ON rec_t.id_record=rec.id_record
+                LEFT JOIN topic top ON top.id_topic=rec_t.id_topic
+                WHERE phone_number= '{$_POST['number']}';");
                 if ($sql) {
                     //$rows = mysqli_num_rows($sql);
                     $rows = pg_num_rows($sql);
@@ -48,7 +52,7 @@
                         <tread>
                         <tr>
                         <td>Дата принятия вызова</sup></td>
-                        <td>Id клиента</td>
+                        <td>Номер клиента</td>
                         <td>Команда оператора</td>
                         <td>Тема разговора</td>
                         </tr>
@@ -77,7 +81,7 @@
             }
         ?>
     </div>
-  <div id="footer"> <a href="http://test1.ru/opd/index.html">Home</a> &copy;2020 </div>
+    <div id="footer"> <a href="http://test1.ru/opd/index.html">Home</a> &copy;2020 </div>
 </div>
 </body>
 </html>
