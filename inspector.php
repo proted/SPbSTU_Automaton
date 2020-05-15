@@ -30,14 +30,14 @@
                 LEFT JOIN mark_inspector mi ON mi.id_mark_inspector = mk.id_mark_inspector
                 LEFT JOIN mark_system ms ON ms.id_mark_system = mk.id_mark_system
                 LEFT JOIN record rec ON rec.id_mark = mk.id_mark
-                WHERE abs(ms.mark_system - mi.mark_inspector) = '{$_POST['number']}';");*/
+                WHERE mi.id_mark_inspector='{$_POST['number']}';");*/
                 $sql = pg_query($link, 
                 "SELECT rec.id_record, mi.mark_inspector, ms.mark_system
                 FROM mark mk
                 LEFT JOIN mark_inspector mi ON mi.id_mark_inspector = mk.id_mark_inspector
                 LEFT JOIN mark_system ms ON ms.id_mark_system = mk.id_mark_system
                 LEFT JOIN record rec ON rec.id_mark = mk.id_mark
-                WHERE abs(ms.mark_system - mi.mark_inspector) = '{$_POST['number']}';");
+                WHERE mi.id_mark_inspector='{$_POST['number']}';");
                 if ($sql) {
                     //$rows = mysqli_num_rows($sql);
                     $rows = pg_num_rows($sql);
