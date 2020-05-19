@@ -36,7 +36,7 @@
                 LEFT JOIN topic top ON top.id_topic=rec_t.id_topic
                 LEFT JOIN client cl ON cl.id_client=inf.id_client
                 WHERE date_time_accept > date '{$_POST['date_start']}' AND date_time_accept < date '{$_POST['date_end']}';");*/
-                $sql = mysqli_query($link, 
+                $sql = pg_query($link, 
                 "SELECT rec.id_record, dt.date_time_accept, cl.phone_number, t.name
                 FROM date_time dt 
                 LEFT JOIN information inf ON dt.id_date_time = inf.id_date_time
