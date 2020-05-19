@@ -22,7 +22,7 @@ function ReportInCsv ($sql) {
         fputcsv($fp, $title, ';');
         echo "<div id=main>
         <p>Количество записей за данный период: $rows</p>";
-        $flag=0;
+        $flag = 0;
         $count=0;
         for($i=1;$i<=$rows;++$i) {
             //$row=mysqli_fetch_row($sql);
