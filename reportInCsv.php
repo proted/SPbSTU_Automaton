@@ -1,9 +1,9 @@
 <?php
 function ReportInCsv ($sql) {
     include ('connection.php');
-    $link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
-	$rows = mysqli_num_rows($sql);
-    //$rows=pg_num_rows($sql);
+    $link = pg_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
+    //$rows = mysqli_num_rows($sql);
+    $rows=pg_num_rows($sql);
     $blackList=0; # черный список
     $markClient=0; # оценка клиента
     $markInspector=0; # оценка инспектора
@@ -16,7 +16,7 @@ function ReportInCsv ($sql) {
     $transferedCall=0; # звонок переведен
     $resetCall=0; # звонок сброшен
     if($rows!=0) {
-        $fp=fopen('test.csv', 'w');
+        $fp=fopen('report.csv', 'w');
         #fputs($fp, chr(0xEF) . chr(0xBB) . chr(0xBF));
         $title=array("Id записи", "Имя mp3", "Имя расшифровки", "Дата/время принятие звонка", "Дата/время начала диалога", "Дата/время окончания диалога", "Продолжительность диалога", "Id оператора", "Имя оператора", "Название команды", "Номер клиента","Черный список", "Направление звонка", "Статус окончания", "Оценка клиента", "Оценка инспектора", "Комментарий", "Имя инспектора", "Дата/время выставления оценки", "Файл лог", "Оценка системы", "Дата/время выставления оценки", "Файл лог", "Тема диалога и ее вес");
         fputcsv($fp, $title, ';');
@@ -25,8 +25,8 @@ function ReportInCsv ($sql) {
         $flag=0;
         $count=0;
         for($i=1;$i<=$rows;++$i) {
-            $row=mysqli_fetch_row($sql);
-            //$row=pg_fetch_row($sql);
+            //$row=mysqli_fetch_row($sql);
+            $row=pg_fetch_row($sql);
             # направление звонка
             if($row[7]==1) {    $enteringCall++;    $row[7] = 'Входящий';   }
             elseif ($row[7]==2) {    $outgoingCall++;    $row[7] = 'Исходящий'; }
@@ -49,10 +49,10 @@ function ReportInCsv ($sql) {
             if($flag==0) {
                 $flag=1;
                 $id=$row[0];
-                $sql1=mysqli_query($link, "SELECT t.name, rec_top.priority FROM topic t LEFT JOIN record_topic rec_top ON rec_top.id_topic=t.id_topic  WHERE rec_top.id_record=$id;");
-                $rows1 = mysqli_num_rows($sql1);
+                $sql1=pg_query($link, "SELECT t.name, rec_top.priority FROM topic t LEFT JOIN record_topic rec_top ON rec_top.id_topic=t.id_topic  WHERE rec_top.id_record=$id;");
+                $rows1 = pg_num_rows($sql1);
                 for($k=1;$k<=$rows1;$k++) {
-                    $row_top=mysqli_fetch_row($sql1);
+                    $row_top=pg_fetch_row($sql1);
                     $t="$row_top[0]";
                     $p="$row_top[1]";
                     $l=$l.$t.' ('.$p.') ';
