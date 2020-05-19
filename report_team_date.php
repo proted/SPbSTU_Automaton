@@ -27,10 +27,9 @@
             if(!empty($_POST["date_start"]) & !empty($_POST["date_end"]) & !empty($_POST["id"])){
                 include ('connection.php');
 
-                $link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
-                //$link = pg_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . pg_result_error($link));
-
-                $sql = mysqli_query($link, 
+                //$link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
+                $link = pg_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . pg_result_error($link));
+                $sql = pg_query($link, 
                 "SELECT rec.id_record, rec.title_mp3, rec.transcript, dt.date_time_accept, dt.date_time_start, dt.date_time_end, dt.duration, inf.direction_call, inf.status_ending, op.id_operator, op.name, t.name, cl.phone_number, cl.blacklist, m.mark_client, m_insp.mark_inspector, m_insp.date_time_mark_inspector, insp.name, m_insp.comment, m_insp.file_logs, m_syst.mark_system, m_syst.date_time_mark_system, m_syst.file_logs
                 FROM date_time dt
                 LEFT JOIN information inf ON inf.id_date_time=dt.id_date_time
@@ -46,12 +45,11 @@
                 if ($sql) {
                     include( 'reportInCsv.php');
                     ReportInCsv($sql);
-                    mysqli_free_result($sql);
-                    //pg_free_result($sql);
+                    //mysqli_free_result($sql);
+                    pg_free_result($sql);
                 }
-                mysqli_close($link);
-
-                //pg_close($link);
+                //mysqli_close($link);
+                pg_close($link);
             }
         ?>
     </div>
