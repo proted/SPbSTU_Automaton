@@ -32,8 +32,8 @@
         <?php
             if(!empty($_POST["date_start"]) & !empty($_POST["date_end"]) & (isset($_POST["in"]) || isset($_POST["out"]) || isset($_POST["inter"]) || isset($_POST["callb"])) & (isset($_POST["end"]) || isset($_POST["transf"]) || isset($_POST["dum"]) )) {
                 include ('connection.php');
-                $link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
-                //$link = pg_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . pg_result_error($link));
+                //$link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
+                $link = pg_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . pg_result_error($link));
                 if(isset($_POST["in"])) {     $direction=1;    }
                 elseif (isset($_POST["out"])) {    $direction=2;    }
                 elseif (isset($_POST["inter"])) {    $direction=3;    }
@@ -41,7 +41,7 @@
                 if(isset($_POST["end"])) {    $status=1;    }
                 elseif (isset($_POST["transf"])) {    $status=2;    }
                 else {  $status=3;  }
-                $sql = mysqli_query($link, 
+                $sql = pg_query($link, 
                 "SELECT rec.id_record, rec.title_mp3, rec.transcript, dt.date_time_accept, dt.date_time_start, dt.date_time_end, dt.duration, inf.direction_call, inf.status_ending, op.id_operator, op.name, t.name, cl.phone_number, cl.blacklist, m.mark_client, m_insp.mark_inspector, m_insp.date_time_mark_inspector, insp.name, m_insp.comment, m_insp.file_logs, m_syst.mark_system, m_syst.date_time_mark_system, m_syst.file_logs
                     FROM date_time dt
                     LEFT JOIN information inf ON inf.id_date_time=dt.id_date_time
@@ -57,11 +57,11 @@
                 if ($sql) {
                     include( 'reportInCsv.php');
                     ReportInCsv($sql);
-                    mysqli_free_result($sql);
-                    //pg_free_result($sql);
+                    //mysqli_free_result($sql);
+                    pg_free_result($sql);
                 }
-                mysqli_close($link);
-                //pg_close($link);
+                //mysqli_close($link);
+                pg_close($link);
             }
         ?>
     </div>
