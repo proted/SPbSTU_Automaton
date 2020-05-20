@@ -15,11 +15,7 @@
         <?php
         require_once 'connection.php';
         //$link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
-        $link = pg_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . pg_result_error($link));
-        /*$sql = mysqli_query($link, 
-        "SELECT cl.id_client, cl.phone_number
-        FROM client cl
-        WHERE cl.blacklist = 1;");*/
+        $link = pg_connect(host=$host, port=$port, dbname=$database, user=$user, password=$password) or die("Ошибка подключения к базе данных" . pg_result_error($link));
         $sql = pg_query($link, 
         "SELECT cl.id_client, cl.phone_number
         FROM client cl
@@ -31,9 +27,8 @@
                 echo "<table  border=1  cellspacing=0 cellpading=0>
                 <tread>
                 <tr>
-                <td>Id-запси</sup></td>
-                <td>Оценка контролера</td>
-                <td>Оценка системы</td>
+                <td>Id клиента</sup></td>
+                <td>Номер телефона</td>
                 </tr>
                 <tread>";
                 echo "<tbody>";
@@ -41,7 +36,7 @@
                     //$row=mysqli_fetch_row($sql);
                     $row=pg_fetch_row($sql);
                     echo "<tr>";
-                    for ($j=0; $j<3; ++$j) {
+                    for ($j=0; $j<2; ++$j) {
                         echo "<td>$row[$j]</td>";
                     }
                     echo "</tr>";
