@@ -1,7 +1,7 @@
 <?php
 function ReportInCsv ($sql) {
     include ('connection.php');
-    $link = pg_connect(host=$host, port=$port, dbname=$database, user=$user, password=$password) or die("Ошибка подключения к базе данных" . mysqli_error($link));
+    $link = pg_connect($connection_string) or die("Ошибка подключения к базе данных" . mysqli_error($link));
 	//$rows = mysqli_num_rows($sql);
     $rows=pg_num_rows($sql);
     $blackList=0; # черный список
