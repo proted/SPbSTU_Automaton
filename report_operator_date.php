@@ -27,7 +27,7 @@
             if(!empty($_POST["date_start"]) & !empty($_POST["date_end"]) & !empty($_POST["id"])){
                 include ('connection.php');
                 //$link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
-                $link = pg_connect(host=$host, port=$port, dbname=$database, user=$user, password=$password) or die("Ошибка подключения к базе данных" . pg_result_error($link));
+                $link = pg_connect($connection_string) or die("Ошибка подключения к базе данных" . pg_result_error($link));
                 $sql = pg_query($link, 
                 "SELECT rec.id_record, rec.title_mp3, rec.transcript_txt, dt.date_time_accept, dt.date_time_start, dt.date_time_end, dt.duration, inf.direction_call, inf.status_ending, op.id_operator, t.name, cl.phone_number, cl.blacklist, m.mark_client, m_insp.mark_inspector, m_insp.date_time_mark_inspector, insp.name, m_insp.comment, m_insp.file_logo, m_syst.mark_system, m_syst.date_time_mark_system, m_syst.file_logo
                 FROM date_time dt
