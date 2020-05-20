@@ -33,7 +33,7 @@
             if(!empty($_POST["date_start"]) & !empty($_POST["date_end"]) & (isset($_POST["in"]) || isset($_POST["out"]) || isset($_POST["inter"]) || isset($_POST["callb"])) & (isset($_POST["end"]) || isset($_POST["transf"]) || isset($_POST["dum"]) )) {
                 include ('connection.php');
                 //$link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
-                $link = pg_connect(host=$host, port=$port, dbname=$database, user=$user, password=$password) or die("Ошибка подключения к базе данных" . pg_result_error($link));
+                $link = pg_connect($connection_string) or die("Ошибка подключения к базе данных" . pg_result_error($link));
                 if(isset($_POST["in"])) {     $direction=1;    }
                 elseif (isset($_POST["out"])) {    $direction=2;    }
                 elseif (isset($_POST["inter"])) {    $direction=3;    }
