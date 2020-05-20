@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Поиск по контролеру</title>
+    <title>Поиск по контролеру</title>
     <link rel="stylesheet" type="text/css" href="table.css">
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" type="text/css" href="input.css">
@@ -23,14 +23,7 @@
             if(!empty($_POST["number"])){
                 require_once 'connection.php';
                 //$link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
-                $link = pg_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . pg_result_error($link));
-                /*$sql = mysqli_query($link, 
-                "SELECT rec.id_record, mi.mark_inspector, ms.mark_system
-                FROM mark mk
-                LEFT JOIN mark_inspector mi ON mi.id_mark_inspector = mk.id_mark_inspector
-                LEFT JOIN mark_system ms ON ms.id_mark_system = mk.id_mark_system
-                LEFT JOIN record rec ON rec.id_mark = mk.id_mark
-                WHERE mi.id_mark_inspector='{$_POST['number']}';");*/
+                $link = pg_connect(host=$host, port=$port, dbname=$database, user=$user, password=$password) or die("Ошибка подключения к базе данных" . pg_result_error($link));
                 $sql = pg_query($link, 
                 "SELECT rec.id_record, mi.mark_inspector, ms.mark_system
                 FROM mark mk
