@@ -23,7 +23,7 @@
             if(!empty($_POST["number"])){
                 require_once 'connection.php';
                 //$link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
-                $link = pg_connect(host=$host, port=$port, dbname=$database, user=$user, password=$password) or die("Ошибка подключения к базе данных" . pg_result_error($link));
+                $link = pg_connect($connection_string) or die("Ошибка подключения к базе данных" . pg_result_error($link));
                 $sql = pg_query($link, 
                 "SELECT rec.id_record, mi.mark_inspector, ms.mark_system
                 FROM mark mk
