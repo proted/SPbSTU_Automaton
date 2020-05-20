@@ -23,7 +23,7 @@ def create_log(res, id):
     :param id: str  -  id разговора
     :return: str  -  имя файла
     '''
-    name = "desc_" + id
+    name = "desc_" + str(id)
     file = open(name, "w")
     for key in res.keys():
         file.write(str(key) + str(res[key]) + '\n')
@@ -48,4 +48,6 @@ def assessment(file, id):
     res['мат'] = search_words(text, read_file('obscene.txt').split('\n'), 0)
     return create_log(res, id)
 
-assessment('testbad.txt', 3)
+
+def number():
+    return 9
