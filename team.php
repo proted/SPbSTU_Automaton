@@ -23,18 +23,7 @@
             if(!empty($_POST["team"])){
                 require_once 'connection.php';
                 //$link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
-                $link = pg_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . pg_result_error($link));
-                /*$sql = mysqli_query($link, 
-                "SELECT rec.id_record, dt.date_time_accept, cl.phone_number, t.name
-                FROM date_time dt 
-                LEFT JOIN information inf ON dt.id_date_time = inf.id_date_time
-                LEFT JOIN operator op ON op.id_operator = inf.id_operator
-                LEFT JOIN team t ON t.id_team=op.id_team
-                LEFT JOIN record rec ON rec.id_information = inf.id_information
-                LEFT JOIN record_topic rec_t ON rec_t.id_record=rec.id_record
-                LEFT JOIN topic top ON top.id_topic=rec_t.id_topic
-                LEFT JOIN client cl ON cl.id_client=inf.id_client
-                WHERE t.name='{$_POST['team']}';");*/
+                $link = pg_connect(host=$host, port=$port, dbname=$database, user=$user, password=$password) or die("Ошибка подключения к базе данных" . pg_result_error($link));
                 $sql = pg_query($link, 
                 "SELECT rec.id_record, dt.date_time_accept, cl.phone_number, t.name
                 FROM date_time dt 
@@ -103,7 +92,7 @@
             }
         ?>
     </div>
-  <div id="footer"> <a href="http://test1.ru/opd/index.html">Home</a> &copy;2020 </div>
+  <div id="footer"> <a href="index.html">Home</a> &copy;2020 </div>
 </div>
 </body>
 </html>
