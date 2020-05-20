@@ -18,28 +18,30 @@
                 <input type="datetime-local" id="localdate" name="date_start"/> -
                 <input type="datetime-local" id="localdate" name="date_end"/>
                 <p>Выберите направление звонка:</p>
-                <p><input type="radio" name="in"/> Входящий</p>
-                <p><input type="radio" name="out"/> Исходящий</p>
-                <p><input type="radio" name="inter"/> Внутренний</p>
-                <p><input type="radio" name="callb"/> Callback</p>
+                <p><input type="radio" name="direction" value="in"/> Входящий</p>
+                <p><input type="radio" name="direction" value="out"/> Исходящий</p>
+                <p><input type="radio" name="direction" value="inter"/> Внутренний</p>
+                <p><input type="radio" name="direction" value="callb"/> Callback</p>
                 <p>Выберите статус завершения:</p>
-                <p><input type="radio" name="end"/> Завершён</p>
-                <p><input type="radio" name="transf"/> Переведён</p>
-                <p><input type="radio" name="dum"/> Сброшен</p>
+                <p><input type="radio" name="ending" value="end"/> Завершён</p>
+                <p><input type="radio" name="ending" value="transf"/> Переведён</p>
+                <p><input type="radio" name="ending" value="dum"/> Сброшен</p>
                 <p><input type="submit" value="Enter"/></p>
             </form>
         </div>
         <?php
-            if(!empty($_POST["date_start"]) & !empty($_POST["date_end"]) & (isset($_POST["in"]) || isset($_POST["out"]) || isset($_POST["inter"]) || isset($_POST["callb"])) & (isset($_POST["end"]) || isset($_POST["transf"]) || isset($_POST["dum"]) )) {
+            if(!empty($_POST["date_start"]) & !empty($_POST["date_end"]) & !empty($_POST["direction"]) & !empty($_POST["ending"])) {
                 include ('connection.php');
                 //$link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
                 $link = pg_connect($connection_string) or die("Ошибка подключения к базе данных" . pg_result_error($link));
-                if(isset($_POST["in"])) {     $direction=1;    }
-                elseif (isset($_POST["out"])) {    $direction=2;    }
-                elseif (isset($_POST["inter"])) {    $direction=3;    }
+                $direct=$_POST["direction"];
+                $en=$_POST["ending"];
+                if($direct=="in") {     $direction=1;    }
+                elseif ($direct=="out") {    $direction=2;    }
+                elseif ($direct=="inter") {    $direction=3;    }
                 else {  $direction=4;    }
-                if(isset($_POST["end"])) {    $status=1;    }
-                elseif (isset($_POST["transf"])) {    $status=2;    }
+                if($en=="end") {    $status=1;    }
+                elseif ($en=="tranf") {    $status=2;    }
                 else {  $status=3;  }
                 $sql = pg_query($link, 
                 "SELECT rec.id_record, rec.title_mp3, rec.transcript_txt, dt.date_time_accept, dt.date_time_start, dt.date_time_end, dt.duration, inf.direction_call, inf.status_ending, op.id_operator, t.name, cl.phone_number, cl.blacklist, m.mark_client, m_insp.mark_inspector, m_insp.date_time_mark_inspector, insp.name, m_insp.comment, m_insp.file_logo, m_syst.mark_system, m_syst.date_time_mark_system, m_syst.file_logo
