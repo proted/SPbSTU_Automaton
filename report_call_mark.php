@@ -18,21 +18,22 @@
                 <input type="datetime-local" id="localdate" name="date_start"/> -
                 <input type="datetime-local" id="localdate" name="date_end"/>
                 <p>Выберите вид оценки</p>
-                <p><input type="radio" name="client"/> Оценка клиента</p>
-                <p><input type="radio" name="system"/> Оценка системы</p>
-                <p><input type="radio" name="inspector"/> Оценка инспектора</p>
+                <p><input type="radio" name="markC" value="client"/> Оценка клиента</p>
+                <p><input type="radio" name="markC" value="system"/> Оценка системы</p>
+                <p><input type="radio" name="markC" value="inspector"/> Оценка инспектора</p>
                 <p>Введите оценку:</p>
                 <p><input type="number" name="mark"/></p>
                 <p><input type="submit" value="Enter"/></p>
             </form>
         </div>
         <?php
-            if(!empty($_POST["date_start"]) & !empty($_POST["date_end"]) & (isset($_POST["client"]) || isset($_POST["system"]) || isset($_POST["inspector"]) ) & !empty($_POST["mark"])) {
+            if(!empty($_POST["date_start"]) & !empty($_POST["date_end"]) & !empty($_POST["markC"]) & !empty($_POST["mark"])) {
                 include ('connection.php');
                 //$link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
                 $link = pg_connect($connection_string) or die("Ошибка подключения к базе данных" . pg_result_error($link));
-                if(isset($_POST["client"])) {
-                    $sql = pg_query($link, 
+		$mark=$_POST["markC"];
+                if($mark=="client") {
+                    $sql = mysqli_query($link, 
                     "SELECT rec.id_record, rec.title_mp3, rec.transcript_txt, dt.date_time_accept, dt.date_time_start, dt.date_time_end, dt.duration, inf.direction_call, inf.status_ending, op.id_operator, t.name, cl.phone_number, cl.blacklist, m.mark_client, m_insp.mark_inspector, m_insp.date_time_mark_inspector, insp.name, m_insp.comment, m_insp.file_logo, m_syst.mark_system, m_syst.date_time_mark_system, m_syst.file_logo
                     FROM date_time dt
                     LEFT JOIN information inf ON inf.id_date_time=dt.id_date_time
@@ -46,8 +47,8 @@
                     LEFT JOIN mark_system m_syst ON m_syst.id_mark_system=m.id_mark_system
                     WHERE date_time_accept > '{$_POST['date_start']}' AND date_time_accept < '{$_POST['date_end']}' AND m.mark_client='{$_POST['mark']}';");
                 }
-                elseif (isset($_POST["system"])) {
-                    $sql = pg_query($link, 
+                elseif ($mark=='system') {
+                    $sql = mysqli_query($link, 
                     "SELECT rec.id_record, rec.title_mp3, rec.transcript_txt, dt.date_time_accept, dt.date_time_start, dt.date_time_end, dt.duration, inf.direction_call, inf.status_ending, op.id_operator, t.name, cl.phone_number, cl.blacklist, m.mark_client, m_insp.mark_inspector, m_insp.date_time_mark_inspector, insp.name, m_insp.comment, m_insp.file_logo, m_syst.mark_system, m_syst.date_time_mark_system, m_syst.file_logo
                     FROM date_time dt
                     LEFT JOIN information inf ON inf.id_date_time=dt.id_date_time
@@ -62,7 +63,7 @@
                     WHERE date_time_accept > '{$_POST['date_start']}' AND date_time_accept < '{$_POST['date_end']}' AND m_syst.mark_system='{$_POST['mark']}';");
                 }
                 else {
-                    $sql = pg_query($link, 
+                    $sql = mysqli_query($link, 
                     "SELECT rec.id_record, rec.title_mp3, rec.transcript_txt, dt.date_time_accept, dt.date_time_start, dt.date_time_end, dt.duration, inf.direction_call, inf.status_ending, op.id_operator, t.name, cl.phone_number, cl.blacklist, m.mark_client, m_insp.mark_inspector, m_insp.date_time_mark_inspector, insp.name, m_insp.comment, m_insp.file_logo, m_syst.mark_system, m_syst.date_time_mark_system, m_syst.file_logo
                     FROM date_time dt
                     LEFT JOIN information inf ON inf.id_date_time=dt.id_date_time
