@@ -65,7 +65,7 @@
             }
         ?>
     </div>
-  <div id="footer"> <a href="http://test1.ru/opd/index.html">Home</a> &copy;2020 </div>
+  <div id="footer"> <a href="index.html">Home</a> &copy;2020 </div>
 </div>
 </body>
 </html>
