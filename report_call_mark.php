@@ -30,10 +30,10 @@
             if(!empty($_POST["date_start"]) & !empty($_POST["date_end"]) & (isset($_POST["client"]) || isset($_POST["system"]) || isset($_POST["inspector"]) ) & !empty($_POST["mark"])) {
                 include ('connection.php');
                 //$link = mysqli_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
-                $link = pg_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . pg_result_error($link));
+                $link = pg_connect(host=$host, port=$port, dbname=$database, user=$user, password=$password) or die("Ошибка подключения к базе данных" . pg_result_error($link));
                 if(isset($_POST["client"])) {
                     $sql = pg_query($link, 
-                    "SELECT rec.id_record, rec.title_mp3, rec.transcript, dt.date_time_accept, dt.date_time_start, dt.date_time_end, dt.duration, inf.direction_call, inf.status_ending, op.id_operator, op.name, t.name, cl.phone_number, cl.blacklist, m.mark_client, m_insp.mark_inspector, m_insp.date_time_mark_inspector, insp.name, m_insp.comment, m_insp.file_logs, m_syst.mark_system, m_syst.date_time_mark_system, m_syst.file_logs
+                    "SELECT rec.id_record, rec.title_mp3, rec.transcript_txt, dt.date_time_accept, dt.date_time_start, dt.date_time_end, dt.duration, inf.direction_call, inf.status_ending, op.id_operator, t.name, cl.phone_number, cl.blacklist, m.mark_client, m_insp.mark_inspector, m_insp.date_time_mark_inspector, insp.name, m_insp.comment, m_insp.file_logo, m_syst.mark_system, m_syst.date_time_mark_system, m_syst.file_logo
                     FROM date_time dt
                     LEFT JOIN information inf ON inf.id_date_time=dt.id_date_time
                     LEFT JOIN record rec ON rec.id_information=inf.id_information
@@ -48,7 +48,7 @@
                 }
                 elseif (isset($_POST["system"])) {
                     $sql = pg_query($link, 
-                    "SELECT rec.id_record, rec.title_mp3, rec.transcript, dt.date_time_accept, dt.date_time_start, dt.date_time_end, dt.duration, inf.direction_call, inf.status_ending, op.id_operator, op.name, t.name, cl.phone_number, cl.blacklist, m.mark_client, m_insp.mark_inspector, m_insp.date_time_mark_inspector, insp.name, m_insp.comment, m_insp.file_logs, m_syst.mark_system, m_syst.date_time_mark_system, m_syst.file_logs
+                    "SELECT rec.id_record, rec.title_mp3, rec.transcript_txt, dt.date_time_accept, dt.date_time_start, dt.date_time_end, dt.duration, inf.direction_call, inf.status_ending, op.id_operator, t.name, cl.phone_number, cl.blacklist, m.mark_client, m_insp.mark_inspector, m_insp.date_time_mark_inspector, insp.name, m_insp.comment, m_insp.file_logo, m_syst.mark_system, m_syst.date_time_mark_system, m_syst.file_logo
                     FROM date_time dt
                     LEFT JOIN information inf ON inf.id_date_time=dt.id_date_time
                     LEFT JOIN record rec ON rec.id_information=inf.id_information
@@ -63,7 +63,7 @@
                 }
                 else {
                     $sql = pg_query($link, 
-                    "SELECT rec.id_record, rec.title_mp3, rec.transcript, dt.date_time_accept, dt.date_time_start, dt.date_time_end, dt.duration, inf.direction_call, inf.status_ending, op.id_operator, op.name, t.name, cl.phone_number, cl.blacklist, m.mark_client, m_insp.mark_inspector, m_insp.date_time_mark_inspector, insp.name, m_insp.comment, m_insp.file_logs, m_syst.mark_system, m_syst.date_time_mark_system, m_syst.file_logs
+                    "SELECT rec.id_record, rec.title_mp3, rec.transcript_txt, dt.date_time_accept, dt.date_time_start, dt.date_time_end, dt.duration, inf.direction_call, inf.status_ending, op.id_operator, t.name, cl.phone_number, cl.blacklist, m.mark_client, m_insp.mark_inspector, m_insp.date_time_mark_inspector, insp.name, m_insp.comment, m_insp.file_logo, m_syst.mark_system, m_syst.date_time_mark_system, m_syst.file_logo
                     FROM date_time dt
                     LEFT JOIN information inf ON inf.id_date_time=dt.id_date_time
                     LEFT JOIN record rec ON rec.id_information=inf.id_information
