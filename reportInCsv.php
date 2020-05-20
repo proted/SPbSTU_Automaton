@@ -1,8 +1,8 @@
 <?php
 function ReportInCsv ($sql) {
     include ('connection.php');
-    $link = pg_connect($host, $user, $password, $database) or die("Ошибка подключения к базе данных" . mysqli_error($link));
-    //$rows = mysqli_num_rows($sql);
+    $link = pg_connect(host=$host, port=$port, dbname=$database, user=$user, password=$password) or die("Ошибка подключения к базе данных" . mysqli_error($link));
+	//$rows = mysqli_num_rows($sql);
     $rows=pg_num_rows($sql);
     $blackList=0; # черный список
     $markClient=0; # оценка клиента
@@ -16,13 +16,13 @@ function ReportInCsv ($sql) {
     $transferedCall=0; # звонок переведен
     $resetCall=0; # звонок сброшен
     if($rows!=0) {
-        $fp=fopen('report.csv', 'w');
+        $fp=fopen('test.csv', 'w');
         #fputs($fp, chr(0xEF) . chr(0xBB) . chr(0xBF));
-        $title=array("Id записи", "Имя mp3", "Имя расшифровки", "Дата/время принятие звонка", "Дата/время начала диалога", "Дата/время окончания диалога", "Продолжительность диалога", "Id оператора", "Имя оператора", "Название команды", "Номер клиента","Черный список", "Направление звонка", "Статус окончания", "Оценка клиента", "Оценка инспектора", "Комментарий", "Имя инспектора", "Дата/время выставления оценки", "Файл лог", "Оценка системы", "Дата/время выставления оценки", "Файл лог", "Тема диалога и ее вес");
+        $title=array("Id записи", "Имя mp3", "Имя расшифровки", "Дата/время принятие звонка", "Дата/время начала диалога", "Дата/время окончания диалога", "Продолжительность диалога", "Id оператора", "Название команды", "Номер клиента","Черный список", "Направление звонка", "Статус окончания", "Оценка клиента", "Оценка инспектора", "Комментарий", "Имя инспектора", "Дата/время выставления оценки", "Файл лог", "Оценка системы", "Дата/время выставления оценки", "Файл лог", "Тема диалога и ее вес");
         fputcsv($fp, $title, ';');
         echo "<div id=main>
         <p>Количество записей за данный период: $rows</p>";
-        $flag = 0;
+        $flag=0;
         $count=0;
         for($i=1;$i<=$rows;++$i) {
             //$row=mysqli_fetch_row($sql);
@@ -37,12 +37,12 @@ function ReportInCsv ($sql) {
             elseif ($row[8]==2) {   $transferedCall++;  $row[8] = 'Переведен';  }
             else {  $resetCall++;  $row[8] = 'Сброшен';}
             # черный список
-            if($row[13]==1) {    $blackList++;    $row[13] = 'В черном списке'; }
-            else {  $row[13] = '-';}
+            if($row[12]==1) {    $blackList++;    $row[12] = 'В черном списке'; }
+            else {  $row[12] = '-';}
             # оценки
-            $markClient=$markClient+$row[14];
-            $markInspector=$markInspector+$row[15];
-            $markSystem=$markSystem+$row[20];
+            $markClient=$markClient+$row[13];
+            $markInspector=$markInspector+$row[14];
+            $markSystem=$markSystem+$row[19];
             if($row[0]!=$id) {
                 $flag=0;
             }
