@@ -1,4 +1,7 @@
 <?php
+function formatDateCI($date) {
+    return date('%d-%m-%Y H:i:s', strtotime($date));
+}
 function ReportInCsv ($sql) {
     include ('connection.php');
     $link = pg_connect($connection_string) or die("Ошибка подключения к базе данных" . mysqli_error($link));
@@ -16,9 +19,10 @@ function ReportInCsv ($sql) {
     $transferedCall=0; # звонок переведен
     $resetCall=0; # звонок сброшен
     if($rows!=0) {
-        $fp=fopen('test.csv', 'w');
-        #fputs($fp, chr(0xEF) . chr(0xBB) . chr(0xBF));
-        $title=array("Id записи", "Имя mp3", "Имя расшифровки", "Дата/время принятие звонка", "Дата/время начала диалога", "Дата/время окончания диалога", "Продолжительность диалога", "Id оператора", "Название команды", "Номер клиента","Черный список", "Направление звонка", "Статус окончания", "Оценка клиента", "Оценка инспектора", "Комментарий", "Имя инспектора", "Дата/время выставления оценки", "Файл лог", "Оценка системы", "Дата/время выставления оценки", "Файл лог", "Тема диалога и ее вес");
+        $fp=fopen('Statistic.csv', 'w');
+        $title=array("Id record", "Name mp3", "Name transcript", "Date/time accept", "Date/time start", "Date/time end", "Duration", "Call direction", 
+		"Status ending", "Operator's ID", "Team name", "Client's number", "Black list", "Client's mark", "Inspector's mark", "Date/time mark inspector", "Inspector name", 
+		"Comment", "File log", "System mark", "Date/time mark", "File log", "dialogue topic and its weight");
         fputcsv($fp, $title, ';');
         echo "<div id=main>
         <p>Количество записей за данный период: $rows</p>";
@@ -28,16 +32,16 @@ function ReportInCsv ($sql) {
             //$row=mysqli_fetch_row($sql);
             $row=pg_fetch_row($sql);
             # направление звонка
-            if($row[7]==1) {    $enteringCall++;    $row[7] = 'Входящий';   }
-            elseif ($row[7]==2) {    $outgoingCall++;    $row[7] = 'Исходящий'; }
-            elseif ($row[7]==3) {    $internalCall++;    $row[7] = 'Внутренний';  }
+            if($row[7]==1) {    $enteringCall++;    $row[7] = 'Incoming';   }
+            elseif ($row[7]==2) {    $outgoingCall++;    $row[7] = 'Outgoing'; }
+            elseif ($row[7]==3) {    $internalCall++;    $row[7] = 'Internal';  }
             else {  $callback++;    $row[7] = 'Callback';}
             # статус завершения
-            if($row[8]==1) {    $complitedCall++;   $row[8] = 'Завершён';}
-            elseif ($row[8]==2) {   $transferedCall++;  $row[8] = 'Переведен';  }
-            else {  $resetCall++;  $row[8] = 'Сброшен';}
+            if($row[8]==1) {    $complitedCall++;   $row[8] = 'Ended';}
+            elseif ($row[8]==2) {   $transferedCall++;  $row[8] = 'Transferred';  }
+            else {  $resetCall++;  $row[8] = 'Dropped';}
             # черный список
-            if($row[12]==1) {    $blackList++;    $row[12] = 'В черном списке'; }
+            if($row[12]==1) {    $blackList++;    $row[12] = 'In Black List'; }
             else {  $row[12] = '-';}
             # оценки
             $markClient=$markClient+$row[13];
@@ -46,6 +50,11 @@ function ReportInCsv ($sql) {
             if($row[0]!=$id) {
                 $flag=0;
             }
+			$row[3] = formatDateCI($row[3]);
+			$row[4] = formatDateCI($row[4]);
+			$row[5] = formatDateCI($row[5]);
+			$row[15] = formatDateCI($row[15]);
+			$row[20] = formatDateCI($row[20]);
             if($flag==0) {
                 $flag=1;
                 $id=$row[0];
