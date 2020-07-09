@@ -1,6 +1,6 @@
 import re
 from nltk import word_tokenize
-from spliting import stemming
+from splitting import stemming
 
 def search_phrases(text, ness_phrases, border):
     """
