@@ -1,10 +1,15 @@
-from spliting import splitting
+from splitting import splitting
 from singular_decomposition import topics
+from assessment import number
+from assessment import create_log
 
 
-def topics_of_dialogue(text):
+
+def analysis(text, id):
     """
     :param text: str - имя файла
-    :return: list - список тем
+    :param id:str  -  id разговора
+    :return: tuple - оценка, лог, темы
     """
-    return topics(splitting(text, 10))
+    result = number(), create_log(text, id), topics(splitting(text, 10))
+    return result
