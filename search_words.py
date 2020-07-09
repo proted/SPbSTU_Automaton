@@ -15,10 +15,10 @@ def search_phrases(text, ness_phrases, border):
         res = re.findall(pattern, text)
         if len(res) != 0:
             if num > border:
-                print(num)
+                #print(num)
                 return 1
             num = num + len(res)
-    print(num)
+    #print(num)
     if num > border:
         return 1
     else:
@@ -37,10 +37,10 @@ def search_words(text, ness_words, border):
     for word in ness_words:
         if word in text:
             if num > border:
-                print(num)
+                #print(num)
                 return 1
             num = num + 1
-    print(num)
+    #print(num)
     if num > border:
         return 1
     else:
