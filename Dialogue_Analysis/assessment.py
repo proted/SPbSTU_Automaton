@@ -40,7 +40,7 @@ def assessment(file, id):
     '''
     res = dict()
     text = read_file(file)
-    interruptions = interrupting(text)
+    #interruptions = interrupting(text)
     text = o_phrases(text)
     res['слова парзиты'] = search_phrases(text, read_file('parasites.txt').split('\n'), 3)
     res['вежливость'] = search_phrases(text, read_file('polite.txt'), 0)
