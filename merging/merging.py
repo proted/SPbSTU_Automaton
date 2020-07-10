@@ -1,5 +1,10 @@
 import re
 
+"""
+Погрешность можно использовать для гипотетического улушения рзультата. 
+Таймкоды распознавания и диаризации немного различаются, поэтому из-за ошибки в таймкодах некоторые слова могут попадать 
+не в свою фразу. Но всё же бОльшее число проблем вызывает неточность диаризации
+"""
 inaccuracy = 0.1
 
 def load_file(file_name):
@@ -60,18 +65,22 @@ def create_file(file_name, text_parsed, time_parsed):
 
     interval_counter = -1
     words_counter = 0
-    for i in time_parsed:
+    for interval in time_parsed:
         interval_counter += 1
 
         string = "(Speaker 1) :"
         if interval_counter % 2 == 0:
             string = "(Speaker 0) :"
 
-        if words_counter > len(text_parsed) or i[1] < text_parsed[words_counter][1][1]:
-            continue
+        # Подозрительное место. Если будут проблемы, смотреть сюда!
+        try:
+            if words_counter > len(text_parsed) or interval[1] < text_parsed[words_counter][1][1]:
+                continue
+        except IndexError:
+            break
 
         string += " <" + str(text_parsed[words_counter][1][0]) + "> "
-        while words_counter < len(text_parsed) and i[1] > text_parsed[words_counter][1][1]:
+        while words_counter < len(text_parsed) and interval[1] > text_parsed[words_counter][1][1]:
             string += " " + text_parsed[words_counter][0]
             words_counter += 1
         string += " <" + str(text_parsed[words_counter - 1][1][1]) + ">\n"
@@ -93,6 +102,7 @@ def merge(text_file, time_file):
     text_parsed = parse_words(text_str)  # Парсинг текста
     time_parsed = parse_time(times)  # Парсинг времени
 
-    res_filename = 'res.txt'
+    res_filename = 'merged_res.txt'
     create_file(res_filename, text_parsed, time_parsed)  # Слияние в один файл
     return res_filename
+
