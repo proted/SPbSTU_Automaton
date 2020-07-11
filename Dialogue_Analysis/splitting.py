@@ -11,7 +11,7 @@ def split_text(file):
     :return: list(str) - список из слов
     Разделяем текст на слова и удаляем "не слова" (цифры, скобки, знаки препинания)
     """
-    fp = open(file, 'r', encoding='windows-1251')
+    fp = open(file, 'r', encoding='utf-8')
     text = fp.read()
     fp.close()
     text = del_non_words(text)
