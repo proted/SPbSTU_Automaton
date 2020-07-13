@@ -1,0 +1,9 @@
+---Добавление строки в таблицу mark_system с оценкой, выставленной системой
+
+INSERT INTO mark_system (date_time_mark_system, mark_system, file_logo) 
+VALUES ('...', '...', '...')
+
+---Добавление строки в таблицу mark
+
+INSERT INTO mark (id_mark_system) 
+VALUES ('...')
