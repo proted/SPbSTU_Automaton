@@ -1,0 +1,21 @@
+---Поиск id записи (id_record) по названию файла с расшифровкой (transcript_txt) в таблице record
+
+SELECT id_record FROM
+record WHERE 
+transcript_txt = '...'
+
+---Определение темы - есть ли она в таблице или нет (если выведет 0, то надо добавить, иначе id темы добавляется в таблицу record_topic)
+
+SELECT id_topic FROM
+topic WHERE
+name = '...'
+
+---Добавление темы в таблицу topic, если ее там нет (после этого запроса можно найти его id по запросу выше)
+
+INSERT INTO topic (name)
+VALUES ('...')
+
+---Добавление данных в таблицу record_topic
+
+INSERT INTO record_topic (id_record, id_topic, priority)
+VALUES ('...', '...', '...')

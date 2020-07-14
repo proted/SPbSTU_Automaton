@@ -1,0 +1,9 @@
+---Äîáàâëåíèå ñòðîêè â òàáëèöó mark_system ñ îöåíêîé, âûñòàâëåííîé ñèñòåìîé
+
+INSERT INTO mark_system (date_time_mark_system, mark_system, file_logo) 
+VALUES ('...', '...', '...')
+
+---Äîáàâëåíèå ñòðîêè â òàáëèöó mark
+
+INSERT INTO mark (id_mark_system) 
+VALUES ('...')
