@@ -19,10 +19,47 @@ CREATE TABLE record (
   id_information INTEGER DEFAULT NULL,
   id_mark INTEGER DEFAULT NULL,
   title_mp3 VARCHAR(30) UNIQUE DEFAULT NULL,
-  transcript VARCHAR(30) UNIQUE DEFAULT NULL,
-  topic VARCHAR(30) DEFAULT NULL
+  transcript_txt VARCHAR(30) UNIQUE DEFAULT NULL
+);
+CREATE TABLE topic (
+  id_topic SERIAL PRIMARY KEY,
+  name VARCHAR(30) UNIQUE DEFAULT NULL
 );
 
+CREATE TABLE record_topic (
+  id_record_topic SERIAL PRIMARY KEY,
+  id_record INTEGER DEFAULT NULL,
+  id_topic INTEGER DEFAULT NULL,
+  priority INTEGER DEFAULT NULL
+); 
+
+CREATE TABLE mark (
+  id_mark SERIAL PRIMARY KEY,
+  id_mark_inspector INTEGER DEFAULT NULL,
+  id_mark_system INTEGER DEFAULT NULL,
+  mark_client INTEGER DEFAULT NULL
+);
+
+CREATE TABLE mark_inspector (
+  id_mark_inspector SERIAL PRIMARY KEY,
+  date_time_mark_inspector TIMESTAMP DEFAULT NULL,
+  id_inspector INTEGER DEFAULT NULL,
+  comment TEXT DEFAULT NULL,
+  mark_inspector INTEGER DEFAULT NULL,
+  file_logo VARCHAR(30) DEFAULT NULL
+);
+
+CREATE TABLE mark_system (
+  id_mark_system SERIAL PRIMARY KEY,
+  date_time_mark_system TIMESTAMP DEFAULT NULL,
+  mark_system INTEGER DEFAULT NULL,
+  file_logo VARCHAR(30) DEFAULT NULL
+);
+
+CREATE TABLE inspector (
+  id_inspector SERIAL PRIMARY KEY,
+  name VARCHAR(30) DEFAULT NULL
+);
 		
 CREATE TABLE information (
   id_information SERIAL PRIMARY KEY,
@@ -44,28 +81,14 @@ CREATE TABLE date_time (
 	
 CREATE TABLE operator (
   id_operator SERIAL PRIMARY KEY,
-  operator_team VARCHAR(30) DEFAULT NULL
+  id_team INTEGER DEFAULT NULL
 );
-		
-CREATE TABLE mark_system (
-  id_mark_system SERIAL PRIMARY KEY,
-  date_time_mark_system TIMESTAMP DEFAULT NULL,
-  mark_system INTEGER DEFAULT NULL
-);
-		
-CREATE TABLE mark_inspector (
-  id_mark_inspector SERIAL PRIMARY KEY,
-  date_time_mark_inspector TIMESTAMP DEFAULT NULL,
-  id_inspector INTEGER DEFAULT NULL,
-  comment TEXT DEFAULT NULL,
-  mark_inspector INTEGER DEFAULT NULL
-);
-	
-CREATE TABLE inspector (
-  id_inspector SERIAL PRIMARY KEY,
-  name VARCHAR(30) DEFAULT NULL
-);
-		
+
+CREATE TABLE team (
+  id_team SERIAL PRIMARY KEY,
+  name VARCHAR(20) DEFAULT NULL
+);		
+			
 CREATE TABLE client (
   id_client SERIAL PRIMARY KEY,
   phone_number INTEGER DEFAULT NULL,
@@ -73,19 +96,14 @@ CREATE TABLE client (
 );
 
 	
-CREATE TABLE mark (
-  id_mark SERIAL PRIMARY KEY,
-  id_mark_inspector INTEGER DEFAULT NULL,
-  id_mark_system INTEGER DEFAULT NULL,
-  mark_client INTEGER DEFAULT NULL
-);
-
-
 ALTER TABLE record ADD FOREIGN KEY (id_information) REFERENCES information (id_information);
 ALTER TABLE record ADD FOREIGN KEY (id_mark) REFERENCES mark (id_mark);
+ALTER TABLE record_topic ADD FOREIGN KEY (id_record) REFERENCES record (id_record);
+ALTER TABLE record_topic ADD FOREIGN KEY (id_topic) REFERENCES topic (id_topic);
 ALTER TABLE information ADD FOREIGN KEY (id_date_time) REFERENCES date_time (id_date_time);
 ALTER TABLE information ADD FOREIGN KEY (id_operator) REFERENCES operator (id_operator);
 ALTER TABLE information ADD FOREIGN KEY (id_client) REFERENCES client (id_client);
+ALTER TABLE operator ADD FOREIGN KEY (id_team) REFERENCES team(id_team);
 ALTER TABLE mark_inspector ADD FOREIGN KEY (id_inspector) REFERENCES inspector (id_inspector);
 ALTER TABLE mark ADD FOREIGN KEY (id_mark_inspector) REFERENCES mark_inspector (id_mark_inspector);
 ALTER TABLE mark ADD FOREIGN KEY (id_mark_system) REFERENCES mark_system (id_mark_system);
